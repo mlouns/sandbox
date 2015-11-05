@@ -7,9 +7,10 @@
 #include <iterator>
 #include <sstream>
 #include <ostream>
-#include <stdio.h>
-#include <math.h>
 #include <string>
 #include <vector>
+#include <cmath>
 #include <map>
 #include <set>
+
+typedef std::vector<std::string> StringVector;

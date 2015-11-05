@@ -4,6 +4,11 @@
 // Date: Nov 2, 2015
 
 #include "basics.h"
+#include "item.h"
+
+#ifndef RECEIPT_H
+
+#define RECEIPT_H
 
 namespace Store
 {
@@ -25,3 +30,5 @@ private:
 std::ostream & operator<<(std::ostream & os, const Receipt & receipt);
 
 } // namespace Store
+
+#endif // RECEIPT_H

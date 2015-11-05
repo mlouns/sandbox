@@ -5,6 +5,10 @@
 
 #include "basics.h"
 
+#ifndef ITEM_H
+
+#define ITEM_H
+
 namespace Store
 {
 
@@ -23,9 +27,9 @@ public:
         {
         }
 
-    const float kDutyPercentage = 10.0f;
-    const float kSalesTaxPercentage = 5.0f;
-    const float kRoundingIncrement = 0.05;
+    static const float kDutyPercentage;
+    static const float kSalesTaxPercentage;
+    static const float kRoundingIncrement;
 
     float Duty() const;          // Returns import duty for the item
     float SalesTax() const;      // Returns sales tax for the item
@@ -33,8 +37,8 @@ public:
     float BasePrice() const { return basePrice_; }
 
     int Count() const { return count_; }
-    bool IsImport() const { return isImport; }
-    bool IsExempt() const { return isExempt; }
+    bool IsImport() const { return isImport_; }
+    bool IsExempt() const { return isExempt_; }
 
 protected:
     int count_;                  // Count for this item
@@ -46,7 +50,7 @@ protected:
 
 std::ostream & operator<<(std::ostream & os, const Item & item);
 
-typedef std::vector<Item> ItemVector;
+typedef std::vector<Store::Item> ItemVector;
 
 
 class ItemFactory
@@ -57,12 +61,12 @@ public:
 public:
     bool CreateItem(const std::string & itemLine, Item & newItem);
 
-    void AddMedicalItem(const std::string & itemString) { medicalItems.insert(itemString); }
-    void AddFoodItem(const std::string & itemString) { foodItems.insert(itemString); }
-    void AddBookItem(const std::string & itemString) { bookItems.insert(itemString); }
+    void AddMedicalItem(const std::string & itemString) { medicalItems_.insert(itemString); }
+    void AddFoodItem(const std::string & itemString) { foodItems_.insert(itemString); }
+    void AddBookItem(const std::string & itemString) { bookItems_.insert(itemString); }
 
 protected:
-    Initialize();
+    void Initialize();
 
     bool ParseItemString(const std::string & itemLine, int & itemCount, std::string & itemName,
                          float & itemPrice, bool & isImported);
@@ -91,3 +95,5 @@ protected:
 };
 
 } // namespace Store
+
+#endif // ITEM_H

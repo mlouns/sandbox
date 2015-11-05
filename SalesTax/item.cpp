@@ -7,6 +7,7 @@
 
 using std::ceil;
 using std::string;
+using std::stringstream;
 using std::vector;
 
 using Store::Item;
@@ -45,15 +46,19 @@ namespace
 }
 
 
+const float Item::kDutyPercentage = 5.0f;
+const float Item::kSalesTaxPercentage = 10.0f;
+const float Item::kRoundingIncrement = 0.05f;
+
 // Returns import duty to be charged on this item.
-float Item::Duty()
+float Item::Duty() const
 {
     return IsImport() ? incrementalPercentage(BasePrice(), kDutyPercentage, kRoundingIncrement) : 0.0f;
 }
 
 
 // Returns sales tax to be charged on this item.
-float Item::SalesTax()
+float Item::SalesTax() const
 {
     return IsExempt() ? 0.0f : incrementalPercentage(BasePrice(), kSalesTaxPercentage, kRoundingIncrement);
 }
@@ -70,7 +75,7 @@ string trimString(std::string & s)
 }
 
 // Splits s into tokens, where space is the delimiter.
-void splitIntoTokens(const string & s, vector<string> & tokens)
+void splitIntoTokens(const string & s, StringVector & tokens)
 {
     tokens.clear();
     string tempBuffer;
@@ -97,8 +102,8 @@ bool ItemFactory::CreateItem(const std::string & itemLine, Item & newItem)
 
     if (success)
     {
-        isExempt = IsExempt(itemName);
-        newItem = Item(itemPrice, isExempt, isImported);
+        bool isExempt = IsExempt(itemName);
+        newItem = Item(itemCount, itemPrice, isExempt, isImported);
     }
     return success;
 }
@@ -121,6 +126,7 @@ bool ItemFactory::ParseItemString(const string & itemLine, int & itemCount, stri
     isImported = false;
 
     // Split itemCopy into tokens, where space is the delimiter
+    StringVector itemTokens;
     splitIntoTokens(itemCopy, itemTokens);
     size_t tokenCount = itemTokens.size();
     
@@ -143,7 +149,7 @@ bool ItemFactory::ParseItemString(const string & itemLine, int & itemCount, stri
 
             // concatenate the rest of the string into itemName
             itemName = "";
-            for (int i = 1; success && (i < tokenCount - 2); ++i)
+            for (int i = 1; success && (i < int(tokenCount - 2)); ++i)
             {
                 if (itemTokens[i].compare(kImportString) == 0)
                 {
