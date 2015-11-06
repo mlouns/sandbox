@@ -65,8 +65,6 @@ class ItemFactory
 public:
     ItemFactory(int size) { }
 
-//    ItemFactory();
-
     bool CreateItem(const std::string & itemLine, Item & newItem);
 
     void AddMedicalItem(const std::string & itemString) { medicalItems_.insert(itemString); }
