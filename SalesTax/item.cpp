@@ -81,19 +81,21 @@ float Item::SalesTax() const
 // Prints out the item before tax is applied.
 void Item::OutputPreTax(ostream & os) const
 {
+    os << std::setprecision(2) << std::fixed;
     os << Count()
        << (IsImport() ? " imported" : "")
        << " " << Name()
-       << " at " << BasePrice();
+       << ": " << BasePrice();
 }
 
 // Prints out the item before tax is applied.
 void Item::OutputWithTax(ostream & os) const
 {
+    os << std::setprecision(2) << std::fixed;
     os << Count()
        << (IsImport() ? " imported" : "")
        << " " << Name()
-       << " at " << TotalPrice();
+       << ": " << TotalPrice();
 }
 
 

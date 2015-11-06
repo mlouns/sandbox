@@ -28,8 +28,8 @@ void Receipt::Output(std::ostream & os) const
     OutputTaxedItems(os);
 
     os << endl;
-    os << "Sales Taxes:" << TotalSalesTax() << endl;
-    os << "Total Price:" << TotalBasePrice() << endl;
+    os << "Sales Taxes: " << TotalCombinedTax() << endl;
+    os << "Total: " << TotalCost() << endl;
 }
 
 
@@ -69,12 +69,12 @@ float Receipt::TotalDuty() const
 //}
 
 // Outputs to os all items with their taxes.
-float Receipt::TotalSalesTax() const
+float Receipt::TotalCombinedTax() const
 {
     float result = 0.0f;
     for (auto item : itemVector_)
     {
-        result += item.TotalTax();
+        result += item.CombinedTax();
     }
     return result;
 }

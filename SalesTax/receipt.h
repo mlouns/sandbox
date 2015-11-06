@@ -25,8 +25,8 @@ public:
 
     float TotalBasePrice() const;          // total price of all items, before tax and import duty
     float TotalDuty() const;               // total import duty on all items
-    float TotalSalesTax() const;           // total sales tax on all items
-    float TotalCost() const { return TotalBasePrice() + TotalDuty() + TotalSalesTax(); }
+    float TotalCombinedTax() const;        // total sales tax plus duty on all items
+    float TotalCost() const { return TotalBasePrice() + TotalCombinedTax(); }
     size_t ItemCount() const { return itemVector_.size(); }
 
 private:
