@@ -103,8 +103,7 @@ bool ItemFactory::CreateItem(const std::string & itemLine, Item & newItem)
     if (success)
     {
         bool isExempt = IsExempt(itemName);
-//bool isExempt = false;
-        newItem = Item(itemCount, itemPrice, isExempt, isImported);
+        newItem = Item(itemCount, itemName, itemPrice, isExempt, isImported);
     }
     return success;
 }

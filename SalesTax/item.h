@@ -11,8 +11,48 @@
 
 namespace Store
 {
+class Item
+{
+public:
+    // ctor for Item.
+    // basePrice: cost of the item, before tax
+    // isExempt: true iff the item is tax-exempt
+    // isImport: true iff the item is an import
+    Item(int count, const std::string & name, float basePrice, bool isExempt, bool isImport)
+        : count_(count),
+          name_(name),
+          basePrice_(basePrice),
+          isExempt_(isExempt),
+          isImport_(isImport)
+        { }
 
-class Item;
+    static const float kDutyPercentage;
+    static const float kSalesTaxPercentage;
+    static const float kRoundingIncrement;
+
+    float Duty() const;          // Returns import duty for the item
+    float SalesTax() const;      // Returns sales tax for the item
+    float TotalPrice() const { return BasePrice() + Duty() + SalesTax(); }
+    float BasePrice() const { return basePrice_; }
+
+    int Count() const { return count_; }
+    std::string Name() const { return name_; }
+    bool IsExempt() const { return isExempt_; }
+    bool IsImport() const { return isImport_; }
+
+protected:
+    int count_;                  // Count for this item
+    std::string name_;           // Name of this item
+    float basePrice_;            // Pre-tax price of the item
+    bool isExempt_;              // True iff the item is tax-exempt
+    bool isImport_;              // True iff the item is an import
+};
+
+
+std::ostream & operator<<(std::ostream & os, const Item & item);
+
+typedef std::vector<Store::Item> ItemVector;
+
 
 class ItemFactory
 {
@@ -55,49 +95,6 @@ protected:
     std::set<std::string> foodItems_;
     std::set<std::string> bookItems_;
 };
-
-class Item
-{
-public:
-    // ctor for Item.
-    // basePrice: cost of the item, before tax
-    // isExempt: true iff the item is tax-exempt
-    // isImport: true iff the item is an import
-    Item(int count, float basePrice, bool isExempt, bool isImport)
-        : count_(count),
-          basePrice_(basePrice),
-          isExempt_(isExempt),
-          isImport_(isImport)
-        {
-        }
-
-    Item() : count_(-1), basePrice_(-1.0), isExempt_(false), isImport_(false) { }
-
-    static const float kDutyPercentage;
-    static const float kSalesTaxPercentage;
-    static const float kRoundingIncrement;
-
-    float Duty() const;          // Returns import duty for the item
-    float SalesTax() const;      // Returns sales tax for the item
-    float TotalPrice() const { return BasePrice() + Duty() + SalesTax(); }
-    float BasePrice() const { return basePrice_; }
-
-    int Count() const { return count_; }
-    bool IsImport() const { return isImport_; }
-    bool IsExempt() const { return isExempt_; }
-
-protected:
-    int count_;                  // Count for this item
-    float basePrice_;            // Pre-tax price of the item
-    bool isExempt_;              // True iff the item is tax-exempt
-    bool isImport_;              // True iff the item is an import
-};
-
-
-std::ostream & operator<<(std::ostream & os, const Item & item);
-
-typedef std::vector<Store::Item> ItemVector;
-
 
 } // namespace Store
 

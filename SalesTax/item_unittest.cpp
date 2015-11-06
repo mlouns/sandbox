@@ -1,21 +1,23 @@
 #include "gtest/gtest.h"
 #include "item.h"
 
+using std::string;
+
 using Store::Item;
 using Store::ItemFactory;
 
 // Simple test for initializing an Item.
 TEST(Item, Init)
 {
-//    Item item0;
-    
-    Item item(4, 1.20, false, true);
+    Item item(4, string("sardines"), 1.20, false, true);
 
     EXPECT_EQ(4, item.Count());
+    EXPECT_STREQ("sardines", item.Name().c_str());
     EXPECT_FLOAT_EQ(1.2, item.BasePrice());
     EXPECT_FALSE(item.IsExempt());
     EXPECT_TRUE(item.IsImport());
 }
+
 
 
 
