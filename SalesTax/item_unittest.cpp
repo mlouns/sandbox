@@ -35,5 +35,5 @@ TEST(ItemFactory, AddSpecialItems)
 
     EXPECT_TRUE(itemFactory.IsMedicalItem("snake oil"));
     EXPECT_TRUE(itemFactory.IsMedicalItem("hair of the dog"));
-    EXPECT_TRUE(itemFactory.IsMedicalItem("box of sleeping pills"));
+    EXPECT_FALSE(itemFactory.IsMedicalItem("box of sleeping pills"));
 }
