@@ -8,3 +8,6 @@
 
 using Store::Receipt;
 
+int main()
+{
+}
