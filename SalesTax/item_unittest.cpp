@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "item.h"
 
+using std::cerr;
+using std::endl;
 using std::string;
 
 using Store::Item;
@@ -341,4 +343,181 @@ TEST(ItemFactory, CreateItem_02)
     EXPECT_FLOAT_EQ(20.0, item.BasePrice());
     EXPECT_FALSE(item.IsExempt());
     EXPECT_TRUE(item.IsImport());
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(2.0, item.SalesTax());      // 10% of 20.0 is 2.0
+    EXPECT_FLOAT_EQ(1.0, item.Duty());          // 5% of 20.0 is 1.0
+    EXPECT_FLOAT_EQ(23.0, item.TotalPrice());   // their sum is 3, added to 20 is 23
+}
+
+TEST(ItemFactory, Spec_01)
+{
+    // Test case 1 from the spec
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("chocolate bar");
+    itemFactory.AddFoodItem("box of chocolates");
+    itemFactory.AddBookItem("book");
+    itemFactory.AddMedicalItem("packet of headache pills");
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 book at 12.49", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(12.49, item.TotalPrice());
+    }
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 music CD at 14.99", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(16.49, item.TotalPrice());
+    }
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 chocolate bar at 0.85", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(0.85, item.TotalPrice());
+    }
+}
+
+TEST(ItemFactory, Spec_02)
+{
+    // Test case 2 from the spec
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("chocolate bar");
+    itemFactory.AddFoodItem("box of chocolates");
+    itemFactory.AddBookItem("book");
+    itemFactory.AddMedicalItem("packet of headache pills");
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 imported box of chocolates at 10.00", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(10.5, item.TotalPrice());
+    }
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 imported bottle of perfume at 47.50", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(54.65, item.TotalPrice());
+    }
+}
+
+TEST(ItemFactory, Spec_03)
+{
+    // Test case 3 from the spec
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("chocolate bar");
+    itemFactory.AddFoodItem("box of chocolates");
+    itemFactory.AddBookItem("book");
+    itemFactory.AddMedicalItem("packet of headache pills");
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 imported bottle of perfume at 27.99", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(32.19, item.TotalPrice());
+    }
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 bottle of perfume at 18.99", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(20.89, item.TotalPrice());
+    }
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 packet of headache pills at 9.75", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(9.75, item.TotalPrice());
+    }
+
+    {
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 box of imported chocolates at 11.25", item);
+
+    EXPECT_TRUE(success);
+
+    item.OutputPreTax(cerr);
+    cerr << endl;
+    item.OutputWithTax(cerr);
+    cerr << endl;
+
+    EXPECT_FLOAT_EQ(11.85, item.TotalPrice());
+    }
 }

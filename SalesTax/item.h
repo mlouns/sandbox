@@ -42,6 +42,9 @@ public:
     bool IsExempt() const { return isExempt_; }
     bool IsImport() const { return isImport_; }
 
+    void OutputPreTax(std::ostream & os) const;
+    void OutputWithTax(std::ostream & os) const;
+
 protected:
     int count_;                  // Count for this item
     std::string name_;           // Name of this item
@@ -51,7 +54,7 @@ protected:
 };
 
 
-std::ostream & operator<<(std::ostream & os, const Item & item);
+//std::ostream & operator<<(std::ostream & os, const Item & item);
 
 typedef std::vector<Store::Item> ItemVector;
 
