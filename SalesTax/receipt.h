@@ -21,7 +21,7 @@ public:
     void OutputTaxedItems(std::ostream & os) const;
     void Output(std::ostream & os) const;
 
-    const Item & ItemAt(size_t i) { return itemVector_[i]; }
+    const Item & ItemAt(size_t i) const { return itemVector_[i]; }
 
     float TotalBasePrice() const;          // total price of all items, before tax and import duty
     float TotalDuty() const;               // total import duty on all items

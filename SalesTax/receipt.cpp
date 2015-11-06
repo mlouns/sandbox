@@ -46,12 +46,35 @@ float Receipt::TotalBasePrice() const
 
 
 // Outputs to os all items with their taxes.
+float Receipt::TotalDuty() const
+{
+    float result = 0.0f;
+    for (auto item : itemVector_)
+    {
+        result += item.Duty();
+    }
+    return result;
+}
+
+
+//// Outputs to os all items with their taxes.
+//float Receipt::TotalSalesTax() const
+//{
+//    float result = 0.0f;
+//    for (size_t i = 0; i < ItemCount(); ++i)
+//    {
+//        result += ItemAt(i).TotalTax();
+//    }
+//    return result;
+//}
+
+// Outputs to os all items with their taxes.
 float Receipt::TotalSalesTax() const
 {
     float result = 0.0f;
     for (auto item : itemVector_)
     {
-        result += item.BasePrice();
+        result += item.TotalTax();
     }
     return result;
 }

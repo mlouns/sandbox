@@ -34,9 +34,11 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTNAME = item
+TESTNAME = receipt
 
 TESTS = $(TESTNAME)_unittest
+
+OBJS = item.o
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -85,5 +87,5 @@ $(TESTNAME)_unittest.o : $(USER_DIR)/$(TESTNAME)_unittest.cpp \
                      $(USER_DIR)/$(TESTNAME).h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/$(TESTNAME)_unittest.cpp
 
-$(TESTNAME)_unittest : $(TESTNAME).o $(TESTNAME)_unittest.o gtest_main.a
+$(TESTNAME)_unittest : $(OBJS) $(TESTNAME).o $(TESTNAME)_unittest.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
