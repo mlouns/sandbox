@@ -174,7 +174,8 @@ TEST(Item, CalculateDuty_05)
 
 
 // Test adding special items to a factory.
-TEST(ItemFactory, AddSpecialItems)
+
+TEST(ItemFactory, AddMedical)
 {
     ItemFactory itemFactory(-1);
 
@@ -184,10 +185,160 @@ TEST(ItemFactory, AddSpecialItems)
 
     EXPECT_TRUE(itemFactory.IsMedicalItem("box of aspirin"));
 
-    itemFactory.AddMedicalItem("snake oil");
+    itemFactory.AddMedicalItem("Xanax");
     itemFactory.AddMedicalItem("hair of the dog");
 
-    EXPECT_TRUE(itemFactory.IsMedicalItem("snake oil"));
+    EXPECT_TRUE(itemFactory.IsMedicalItem("Xanax"));
     EXPECT_TRUE(itemFactory.IsMedicalItem("hair of the dog"));
-    EXPECT_FALSE(itemFactory.IsMedicalItem("box of sleeping pills"));
+    
+    EXPECT_FALSE(itemFactory.IsMedicalItem("snake oil"));
+}
+
+TEST(ItemFactory, AddFood)
+{
+    ItemFactory itemFactory(-1);
+
+    EXPECT_FALSE(itemFactory.IsFoodItem("Vegemite"));
+
+    itemFactory.AddFoodItem("Vegemite");
+
+    EXPECT_TRUE(itemFactory.IsFoodItem("Vegemite"));
+
+    itemFactory.AddFoodItem("everlasting gobstopper");
+    itemFactory.AddFoodItem("pig's feet");
+
+    EXPECT_TRUE(itemFactory.IsFoodItem("everlasting gobstopper"));
+    EXPECT_TRUE(itemFactory.IsFoodItem("pig's feet"));
+    
+    EXPECT_FALSE(itemFactory.IsFoodItem("Slim Jims"));
+}
+
+TEST(ItemFactory, AddBook)
+{
+    ItemFactory itemFactory(-1);
+
+    EXPECT_FALSE(itemFactory.IsBookItem("Curious George"));
+
+    itemFactory.AddBookItem("Curious George");
+
+    EXPECT_TRUE(itemFactory.IsBookItem("Curious George"));
+
+    itemFactory.AddBookItem("A Confederacy of Dunces");
+    itemFactory.AddBookItem("Tintin au pays des Soviets");
+
+    EXPECT_TRUE(itemFactory.IsBookItem("A Confederacy of Dunces"));
+    EXPECT_TRUE(itemFactory.IsBookItem("Tintin au pays des Soviets"));
+    
+    EXPECT_FALSE(itemFactory.IsBookItem("Twilight Tenth Anniversary/Life and Death Dual Edition"));
+}
+
+TEST(ItemFactory, ParseLine_01)
+{
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("Vegemite");
+    itemFactory.AddBookItem("Curious George");
+
+    int itemCount;
+    string itemName;
+    float itemPrice;
+    bool isImported;
+
+    bool success = itemFactory.ParseItemString("7 swans a swimming at 77.00",
+                                               itemCount, itemName, itemPrice, isImported);
+
+    EXPECT_TRUE(success);
+    EXPECT_EQ(7, itemCount);
+    EXPECT_STREQ("swans a swimming", itemName.c_str());
+    EXPECT_FLOAT_EQ(77.0, itemPrice);
+    EXPECT_FALSE(isImported);
+}
+
+TEST(ItemFactory, ParseLine_02)
+{
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("Vegemite");
+    itemFactory.AddFoodItem("box of chocolates");
+    itemFactory.AddBookItem("Curious George");
+
+    int itemCount;
+    string itemName;
+    float itemPrice;
+    bool isImported;
+
+    bool success = itemFactory.ParseItemString("1 box of chocolates at 10.00",
+                                               itemCount, itemName, itemPrice, isImported);
+
+    EXPECT_TRUE(success);
+    EXPECT_EQ(1, itemCount);
+    EXPECT_STREQ("box of chocolates", itemName.c_str());
+    EXPECT_FLOAT_EQ(10.0, itemPrice);
+    EXPECT_FALSE(isImported);
+}
+
+TEST(ItemFactory, ParseLine_03)
+{
+    // Same test, just with imported
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("Vegemite");
+    itemFactory.AddFoodItem("box of chocolates");
+    itemFactory.AddBookItem("Curious George");
+
+    int itemCount;
+    string itemName;
+    float itemPrice;
+    bool isImported;
+
+    bool success = itemFactory.ParseItemString("1 imported box of chocolates at 10.00",
+                                               itemCount, itemName, itemPrice, isImported);
+
+    EXPECT_TRUE(success);
+    EXPECT_EQ(1, itemCount);
+    EXPECT_STREQ("box of chocolates", itemName.c_str());
+    EXPECT_FLOAT_EQ(10.0, itemPrice);
+    EXPECT_TRUE(isImported);
+}
+
+TEST(ItemFactory, CreateItem_01)
+{
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("Vegemite");
+    itemFactory.AddFoodItem("box of chocolates");
+    itemFactory.AddBookItem("Curious George");
+
+    Item item;
+
+    bool success = itemFactory.CreateItem("1 box of chocolates at 10.00", item);
+
+    EXPECT_TRUE(success);
+
+    EXPECT_EQ(1, item.Count());
+    EXPECT_STREQ("box of chocolates", item.Name().c_str());
+    EXPECT_FLOAT_EQ(10.0, item.BasePrice());
+    EXPECT_TRUE(item.IsExempt());
+    EXPECT_FALSE(item.IsImport());
+}
+
+TEST(ItemFactory, CreateItem_02)
+{
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("Vegemite");
+    itemFactory.AddFoodItem("box of chocolates");
+    itemFactory.AddBookItem("Curious George");
+
+    Item item;
+
+    bool success = itemFactory.CreateItem("2 imported haggis at 20.00", item);
+
+    EXPECT_TRUE(success);
+
+    EXPECT_EQ(2, item.Count());
+    EXPECT_STREQ("haggis", item.Name().c_str());
+    EXPECT_FLOAT_EQ(20.0, item.BasePrice());
+    EXPECT_FALSE(item.IsExempt());
+    EXPECT_TRUE(item.IsImport());
 }

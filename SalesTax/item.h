@@ -26,6 +26,8 @@ public:
           isImport_(isImport)
         { }
 
+    Item() {}
+
     static const float kDutyPercentage;
     static const float kSalesTaxPercentage;
     static const float kRoundingIncrement;

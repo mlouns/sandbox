@@ -168,7 +168,12 @@ bool ItemFactory::ParseItemString(const string & itemLine, int & itemCount, stri
                 }
                 else
                 {
-                    itemName = itemName + itemTokens[i];
+                    if (itemName.size() > 0)
+                    {
+                        // Put back spaces between tokens
+                        itemName += " ";
+                    }
+                    itemName += itemTokens[i];
                 }
             }
             success = success && (itemName.size() > 0);
