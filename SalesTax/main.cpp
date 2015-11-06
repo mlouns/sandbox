@@ -18,17 +18,14 @@ using Store::Item;
 using Store::ItemFactory;
 using Store::Receipt;
 
-bool ComputeTax(const string & fileName, ostream & os)
+// Reads file line by line, creating a new item from each line. Then writes out the receipt.
+//   fileName: name of file to read from
+//   itemFactory: creates items, knows about which item descriptions are in the lists of exemptions
+//   os: where to write the output
+bool ComputeTax(const string & fileName, const ItemFactory & itemFactory, ostream & os)
 {
     bool success = true;
     
-    ItemFactory itemFactory(-1);
-
-    itemFactory.AddFoodItem("chocolate bar");
-    itemFactory.AddFoodItem("box of chocolates");
-    itemFactory.AddBookItem("book");
-    itemFactory.AddMedicalItem("packet of headache pills");
-
     Receipt receipt;
 
     ifstream infile(fileName);
@@ -53,9 +50,16 @@ bool ComputeTax(const string & fileName, ostream & os)
 
 int main()
 {
-    ComputeTax("input1.txt", cout);
-    ComputeTax("input2.txt", cout);
-    ComputeTax("input3.txt", cout);
+    ItemFactory itemFactory(-1);
+
+    itemFactory.AddFoodItem("chocolate bar");
+    itemFactory.AddFoodItem("box of chocolates");
+    itemFactory.AddBookItem("book");
+    itemFactory.AddMedicalItem("packet of headache pills");
+
+    ComputeTax("input1.txt", itemFactory, cout);
+    ComputeTax("input2.txt", itemFactory, cout);
+    ComputeTax("input3.txt", itemFactory, cout);
 
     return 0;
 }

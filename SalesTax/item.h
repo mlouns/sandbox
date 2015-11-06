@@ -65,7 +65,7 @@ class ItemFactory
 public:
     ItemFactory(int size) { }
 
-    bool CreateItem(const std::string & itemLine, Item & newItem);
+    bool CreateItem(const std::string & itemLine, Item & newItem) const;
 
     void AddMedicalItem(const std::string & itemString) { medicalItems_.insert(itemString); }
     void AddFoodItem(const std::string & itemString) { foodItems_.insert(itemString); }
@@ -75,7 +75,7 @@ public:
     void Initialize();
 
     bool ParseItemString(const std::string & itemLine, int & itemCount, std::string & itemName,
-                         float & itemPrice, bool & isImported);
+                         float & itemPrice, bool & isImported) const;
 
     bool IsMedicalItem(const std::string & itemName) const
     {

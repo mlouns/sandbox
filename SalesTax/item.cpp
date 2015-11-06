@@ -127,7 +127,7 @@ void SplitIntoTokens(const string & s, StringVector & tokens)
 
 // Sets newItem to be a new item created from the new line of items.
 // Returns success of the operation.
-bool ItemFactory::CreateItem(const std::string & itemLine, Item & newItem)
+bool ItemFactory::CreateItem(const std::string & itemLine, Item & newItem) const
 {
     int itemCount = -1;
     string itemName = "";
@@ -151,7 +151,7 @@ bool ItemFactory::CreateItem(const std::string & itemLine, Item & newItem)
 //   itemPrice: the pre-tax price of the item
 //   isImported: whether the item string says the item was imported
 bool ItemFactory::ParseItemString(const string & itemLine, int & itemCount, string & itemName,
-                                  float & itemPrice, bool & isImported)
+                                  float & itemPrice, bool & isImported) const
 {
     const string kImportString = "imported";
 
