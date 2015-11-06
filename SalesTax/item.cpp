@@ -19,7 +19,7 @@ namespace
     // Returns raw percentage of price, without rounding.
     //   price: amount to compute percentage on
     //   percent: percent to compute. 5.2% is represented as 5.2, not 0.052
-    float rawPercentage(float price, float percent)
+    float RawPercentage(float price, float percent)
     {
         return price * percent / 100.0f;
     }
@@ -27,7 +27,7 @@ namespace
     // Returns value, rounded up to the nearest increment.
     //   value: base value to round from
     //   rounding: amount to round up to. If rounding up to nearest dime, set to 0.10
-    float roundUpToNearest(float value, float rounding)
+    float RoundUpToNearest(float value, float rounding)
     {
         int wholePart = value;
         float fractionalPart = value - wholePart;
@@ -39,9 +39,9 @@ namespace
     //   price: original price
     //   percent: percent of price to compute. 5.2% is represented as 5.2, not 0.052
     //   rounding: amount to round up to. If rounding up to nearest dime, set to 0.10
-    float incrementalPercentage(float price, float percent, float rounding)
+    float IncrementalPercentage(float price, float percent, float rounding)
     {
-        return roundUpToNearest(rawPercentage(price, percent), rounding);
+        return RoundUpToNearest(RawPercentage(price, percent), rounding);
     }
 }
 
@@ -53,21 +53,21 @@ const float Item::kRoundingIncrement = 0.05f;
 // Returns import duty to be charged on this item.
 float Item::Duty() const
 {
-    return IsImport() ? incrementalPercentage(BasePrice(), kDutyPercentage, kRoundingIncrement) : 0.0f;
+    return IsImport() ? IncrementalPercentage(BasePrice(), kDutyPercentage, kRoundingIncrement) : 0.0f;
 }
 
 
 // Returns sales tax to be charged on this item.
 float Item::SalesTax() const
 {
-    return IsExempt() ? 0.0f : incrementalPercentage(BasePrice(), kSalesTaxPercentage, kRoundingIncrement);
+    return IsExempt() ? 0.0f : IncrementalPercentage(BasePrice(), kSalesTaxPercentage, kRoundingIncrement);
 }
 
 
 namespace
 {
 // Returns s, with leading and trailing spaces removed.
-string trimString(std::string & s)
+string TrimString(std::string & s)
 {
     s.erase(0, s.find_first_not_of(' '));
     s.erase(s.find_last_not_of(' ') + 1);
@@ -75,7 +75,7 @@ string trimString(std::string & s)
 }
 
 // Splits s into tokens, where space is the delimiter.
-void splitIntoTokens(const string & s, StringVector & tokens)
+void SplitIntoTokens(const string & s, StringVector & tokens)
 {
     tokens.clear();
     string tempBuffer;
@@ -103,6 +103,7 @@ bool ItemFactory::CreateItem(const std::string & itemLine, Item & newItem)
     if (success)
     {
         bool isExempt = IsExempt(itemName);
+//bool isExempt = false;
         newItem = Item(itemCount, itemPrice, isExempt, isImported);
     }
     return success;
@@ -122,12 +123,13 @@ bool ItemFactory::ParseItemString(const string & itemLine, int & itemCount, stri
 
     bool success = true;
     string itemCopy = itemLine;
+    itemCopy = TrimString(itemCopy);
 
     isImported = false;
 
     // Split itemCopy into tokens, where space is the delimiter
     StringVector itemTokens;
-    splitIntoTokens(itemCopy, itemTokens);
+    SplitIntoTokens(itemCopy, itemTokens);
     size_t tokenCount = itemTokens.size();
     
     success = tokenCount >= 4;
@@ -139,13 +141,21 @@ bool ItemFactory::ParseItemString(const string & itemLine, int & itemCount, stri
         success = atString.compare("at") == 0;
         if (success)
         {
-            // count is the first token
-            string countString = itemTokens[0];
-            itemCount = std::stoi(countString);
+            try
+            {
+                // count is the first token
+                string countString = itemTokens[0];
+                itemCount = std::stoi(countString);
 
-            // price is the last token
-            string priceString = itemTokens[tokenCount - 1];
-            itemPrice = std::stof(priceString);
+                // price is the last token
+                string priceString = itemTokens[tokenCount - 1];
+                itemPrice = std::stof(priceString);
+            }
+            catch (...)
+            {
+                // There was a problem converting a supposed number string to a number with stoi or stof
+                success = false;
+            }
 
             // concatenate the rest of the string into itemName
             itemName = "";

@@ -29,4 +29,11 @@ $(TARGET): $(OBJECTS)
 
 clean:
 	-rm -f *.o
+	-rm -fr $(TARGET).dSYM
+	-rm -f $(TARGET)
+
+cleanest:
+	-rm -f *.o
+	-rm -f *~
+	-rm -fr $(TARGET).dSYM
 	-rm -f $(TARGET)

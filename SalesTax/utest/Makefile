@@ -24,8 +24,13 @@ USER_DIR = ..
 # the compiler doesn't generate warnings in Google Test headers.
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
+#CXX = g++
+
+#AR = gcc-ar
+
 # Flags passed to the C++ compiler.
 CXXFLAGS += -g -Wall -Wextra -pthread
+#CXXFLAGS += -g -O0 -ggdb --std=c++11 -W -Wall
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
