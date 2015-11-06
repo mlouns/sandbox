@@ -32,10 +32,11 @@ public:
     static const float kSalesTaxPercentage;
     static const float kRoundingIncrement;
 
+    float BasePrice() const { return basePrice_; }
     float Duty() const;          // Returns import duty for the item
     float SalesTax() const;      // Returns sales tax for the item
-    float TotalPrice() const { return BasePrice() + Duty() + SalesTax(); }
-    float BasePrice() const { return basePrice_; }
+    float TotalPrice() const { return BasePrice() + TotalTax(); }
+    float TotalTax() const { return Duty() + SalesTax(); }
 
     int Count() const { return count_; }
     std::string Name() const { return name_; }
