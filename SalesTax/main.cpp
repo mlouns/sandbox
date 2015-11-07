@@ -43,7 +43,7 @@ bool ComputeTax(const string & fileName, const ItemFactory & itemFactory, ostrea
         }
         receipt.AddItem(item);
     }
-    receipt.Output(os);
+    receipt.OutputComplete(os);
     os << endl;
     return success;
 }

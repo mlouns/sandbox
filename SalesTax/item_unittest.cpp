@@ -1,4 +1,7 @@
 #include "gtest/gtest.h"
+
+#define protected public       // Evil hack to allow unit testing of protected methods.
+
 #include "item.h"
 
 using std::cerr;

@@ -23,7 +23,7 @@ void Receipt::OutputTaxedItems(std::ostream & os) const
 
 
 // Outputs to os all items with their taxes.
-void Receipt::Output(std::ostream & os) const
+void Receipt::OutputComplete(std::ostream & os) const
 {
     OutputTaxedItems(os);
 
@@ -56,17 +56,6 @@ float Receipt::TotalDuty() const
     return result;
 }
 
-
-//// Outputs to os all items with their taxes.
-//float Receipt::TotalSalesTax() const
-//{
-//    float result = 0.0f;
-//    for (size_t i = 0; i < ItemCount(); ++i)
-//    {
-//        result += ItemAt(i).TotalTax();
-//    }
-//    return result;
-//}
 
 // Outputs to os all items with their taxes.
 float Receipt::TotalCombinedTax() const
