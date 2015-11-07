@@ -42,7 +42,7 @@ void Plateau::Initialize()
 
 
 // Returns the mark at position (x,y) on the plateau
-char Plateau::GetMark(size_t x, size_t y)
+char Plateau::GetMark(size_t x, size_t y) const
 {
     return map_[y][x];
 }
@@ -55,10 +55,22 @@ void Plateau::SetMark(size_t x, size_t y, char mark)
 }
 
 
-// Outputs the plateau to os
-void Plateau::Output(ostream & os)
+// Outputs status of all rovers to os
+void Plateau::OutputRoverStatus(ostream & os) const
 {
-    for (int i = 0; i <= MaxHeight(); ++i)
+    os << endl << "Status of all rovers:" << endl;
+    for (auto rover : roverVector_)
+    {
+        os << rover->CurrentStatus() << endl;
+    }    
+}
+
+
+// Outputs a map of the plateau to os
+void Plateau::OutputMap(ostream & os) const
+{
+    os << endl << "Map of the plateau:" << endl;
+    for (int i = MaxHeight(); i >= 0; --i)
     {
         os << map_[i] << endl;
     }    
@@ -68,22 +80,20 @@ void Plateau::Output(ostream & os)
 // Adds newRover to this plateau.
 void Plateau::AddRover(Rover * newRover)
 {
+//    cerr << "Add rover: count = " << RoverCount() << endl;
     roverVector_.push_back(newRover);
+    newRover->SetId('0' + char(RoverCount()));
 }
 
 
 // Moves each rover, returns combined success
-bool Plateau::MoveRovers()
+void Plateau::MoveRovers()
 {
     for (auto rover : roverVector_)
     {
-        cerr << "Move rover" << endl;
-        if (!rover->Move())
-        {
-            return false;           // <== * return *
-        }
+//        cerr << "Move rover: " << rover << endl;
+        rover->Move();
     }
-    return true;
 }
 
 
@@ -100,26 +110,12 @@ bool Plateau::IsValidPosition(int x, int y) const
 Rover::Rover(int x, int y, char direction, const std::string & instructions, Plateau & plateau)
     : x_(x),
       y_(y),
+      direction_(direction),
       instructions_(instructions),
       currentInstructionIndex_(0),
       plateau_(plateau)
 {
-    cerr << "New rover: (" << x << ", " << y << "), dir=" << direction << ", instr=" << instructions << endl;
-
-    switch (direction)
-    {
-    case 'N': direction = kNorth;
-        break;
-    case 'E': direction = kEast;
-        break;
-    case 'S': direction = kSouth;
-        break;
-    case 'W': direction = kWest;
-        break;
-    default:
-        cerr << "Read unknown direction: '" << direction << "'" << endl;
-    }
-    plateau.AddRover(this);
+//    cerr << "New rover: (" << x << ", " << y << "), dir=" << direction << ", instr=" << instructions << endl;
 }
 
 
@@ -129,6 +125,7 @@ bool Rover::Move()
     bool success = true;
     while (success && !IsDoneMoving())
     {
+//        cerr << "  current status = " << CurrentStatus() << endl;
         success = MoveOnce();
     }
     return success;
@@ -138,6 +135,7 @@ bool Rover::Move()
 // Move this rover the single next instruction.
 bool Rover::MoveOnce()
 {
+//    cerr << "    Move once: " << this << endl;
     bool success = true;
     switch (CurrentInstruction())
     {
@@ -164,30 +162,31 @@ bool Rover::MoveOnce()
 // Return true iff this rover has finished moving.
 bool Rover::IsDoneMoving() const
 {
-    return CurrentInstructionIndex() < instructions_.size();
+//    cerr << "    Is done? current=" << CurrentInstructionIndex() << endl;
+    return CurrentInstructionIndex() >= instructions_.size();
 }
 
 
 // Turns the rover 90 degrees to the left.
 void Rover::TurnLeft()
 {
-    cerr << "turn left" << endl;
+//    cerr << "    turn left" << endl;
     switch (CurrentDirection())
     {
-        case kNorth:
-            direction_ = kWest;
+        case 'N':
+            direction_ = 'W';
             break;
 
-        case kEast:
-            direction_ = kNorth; 
+        case 'E':
+            direction_ = 'N'; 
             break;
 
-        case kSouth:
-            direction_ = kEast;
+        case 'S':
+            direction_ = 'E';
             break;
 
-        case kWest:
-            direction_ = kSouth;
+        case 'W':
+            direction_ = 'S';
             break;
     }
 }
@@ -196,23 +195,23 @@ void Rover::TurnLeft()
 // Turns the rover 90 degrees to the right.
 void Rover::TurnRight()
 {
-    cerr << "turn right" << endl;
+//    cerr << "    turn right" << endl;
     switch (CurrentDirection())
     {
-        case kNorth:
-            direction_ = kEast;
+        case 'N':
+            direction_ = 'E';
             break;
 
-        case kEast:
-            direction_ = kSouth;
+        case 'E':
+            direction_ = 'S';
             break;
 
-        case kSouth:
-            direction_ = kWest;
+        case 'S':
+            direction_ = 'W';
             break;
 
-        case kWest:
-            direction_ = kNorth;
+        case 'W':
+            direction_ = 'N';
             break;
     }
 }
@@ -222,7 +221,7 @@ void Rover::TurnRight()
 // Returns success if we can do this legally.
 bool Rover::MoveForward()
 {
-    cerr << "move forward" << endl;
+//    cerr << "    move forward" << endl;
     int x, y;
     GetCurrentPosition(x, y);
     GetPlateau().SetMark(x, y, Marker());
@@ -230,7 +229,7 @@ bool Rover::MoveForward()
     bool success = GetPlateau().IsValidPosition(x, y);
     if (success)
     {
-        GetPlateau().SetMark(x, y, '*');
+        GetPlateau().SetMark(x, y, Id());
         x_ = x;
         y_ = y;
     }
@@ -239,7 +238,7 @@ bool Rover::MoveForward()
 
 
 // Sets x and y to the next position if we move forward
-void Rover::GetCurrentPosition(int & x, int & y)
+void Rover::GetCurrentPosition(int & x, int & y) const
 {
     x = x_;
     y = y_;
@@ -247,27 +246,36 @@ void Rover::GetCurrentPosition(int & x, int & y)
 
 
 // Sets x and y to the next position if we move forward
-void Rover::GetForwardPosition(int & x, int & y)
+void Rover::GetForwardPosition(int & x, int & y) const
 {
     GetCurrentPosition(x, y);
     switch (CurrentDirection())
     {
-        case kNorth:
+        case 'N':
             y += 1;
             break;
 
-        case kEast:
+        case 'E':
             x += 1;
             break;
 
-        case kSouth:
+        case 'S':
             y -= 1;
             break;
 
-        case kWest:
+        case 'W':
             x -= 1;
             break;
     }
+}
+
+
+// Returns a succinct string indicating current rover status
+string Rover::CurrentStatus() const
+{
+    stringstream result;
+    result << x_ << " " << y_ << " " << CurrentDirection();
+    return result.str();
 }
 
 
@@ -277,19 +285,19 @@ char Rover::Marker() const
     char result = '\0';
     switch (CurrentDirection())
     {
-        case kNorth:
+        case 'N':
             result = '^';
             break;
 
-        case kEast:
+        case 'E':
             result = '>';
             break;
 
-        case kSouth:
+        case 'S':
             result = 'V';
             break;
 
-        case kWest:
+        case 'W':
             result = '<';
             break;
     }
