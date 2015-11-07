@@ -6,9 +6,11 @@
 #include "robot.h"
 
 using std::cerr;
+using std::cin;
 using std::cout;
 using std::endl;
 using std::ifstream;
+using std::istream;
 using std::string;
 using std::stringstream;
 
@@ -32,14 +34,12 @@ void SplitIntoTokens(const string & s, StringVector & tokens)
 }
 
 // Reads from the file in fileName, sets up rovers on plateau.
-bool ParseInput(const string & fileName, Plateau * & plateau)
+bool ParseInput(istream & input, Plateau * & plateau)
 {
-    ifstream infile(fileName);
-
     string line;
 
     // Read in size of the plateau.
-    std::getline(infile, line);
+    std::getline(input, line);
 
     StringVector roverTokens;
     SplitIntoTokens(line, roverTokens);
@@ -55,7 +55,7 @@ bool ParseInput(const string & fileName, Plateau * & plateau)
 
     plateau = new Plateau(x, y);
 
-    while (success && std::getline(infile, line))
+    while (success && std::getline(input, line))
     {
         SplitIntoTokens(line, roverTokens);
 
@@ -81,7 +81,7 @@ bool ParseInput(const string & fileName, Plateau * & plateau)
             if (success)
             {
                 string instructions;
-                std::getline(infile, instructions);
+                std::getline(input, instructions);
 
                 auto rover = new Rover(x, y, direction, instructions, *plateau);
             }
@@ -100,7 +100,7 @@ int main()
 {
     Plateau * plateau;
 
-    bool success = ParseInput("input.txt", plateau);
+    bool success = ParseInput(cin, plateau);
     if (success)
     {
         plateau->MoveRovers();

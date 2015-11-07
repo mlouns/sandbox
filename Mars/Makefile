@@ -1,4 +1,4 @@
-TARGET = main
+TARGET = mars
 LIBS = -lmpfr -lgmp
 CC = gcc
 CXX = g++

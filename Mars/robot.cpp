@@ -85,7 +85,7 @@ void Plateau::AddRover(Rover * newRover)
 }
 
 
-// Moves each rover, returns combined success
+// Moves each rover
 void Plateau::MoveRovers()
 {
     for (auto rover : roverVector_)
@@ -96,7 +96,6 @@ void Plateau::MoveRovers()
 
 
 // Returns true iff (x,y) is a valid position on this plateau.
-// It is valid iff (x,y) is on the plateau.
 // We don't currently check for collision with other rovers, although we could do that with a little more info.
 bool Plateau::IsValidPosition(int x, int y) const
 {
@@ -229,7 +228,7 @@ bool Rover::MoveForward()
 }
 
 
-// Sets x and y to the next position if we move forward
+// Sets x and y to the current position
 void Rover::GetCurrentPosition(int & x, int & y) const
 {
     x = x_;
@@ -262,7 +261,7 @@ void Rover::GetForwardPosition(int & x, int & y) const
 }
 
 
-// Returns a succinct string indicating current rover status
+// Returns a succinct string describing the current rover status
 string Rover::CurrentStatus() const
 {
     stringstream result;
@@ -271,7 +270,7 @@ string Rover::CurrentStatus() const
 }
 
 
-// Returns marker corresponding to the current direction
+// Returns a 1-char marker corresponding to the current direction, to write onto the map
 char Rover::Marker() const
 {
     char result = '\0';
