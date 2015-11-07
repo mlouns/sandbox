@@ -64,6 +64,8 @@ public:
     void GetCurrentPosition(int & x, int & y);      // Returns (x,y) position of this rover
     void GetForwardPosition(int & x, int & y);      // Returns position of this rover if it should move one step
 
+    char Marker() const;                            // Returns marker for the current direction
+
     Plateau & GetPlateau() { return plateau_; }
 
 protected:
@@ -76,6 +78,8 @@ protected:
     size_t currentInstructionIndex_;                // which instruction we're on right now
 
     Plateau & plateau_;                             // The plateau this rover is moving on
+
+    char marker_;                                   // Mark we leave in our current square
 };
 
 }

@@ -77,6 +77,7 @@ bool Plateau::MoveRovers()
 {
     for (auto rover : roverVector_)
     {
+        cerr << "Move rover" << endl;
         if (!rover->Move())
         {
             return false;           // <== * return *
@@ -103,6 +104,8 @@ Rover::Rover(int x, int y, char direction, const std::string & instructions, Pla
       currentInstructionIndex_(0),
       plateau_(plateau)
 {
+    cerr << "New rover: (" << x << ", " << y << "), dir=" << direction << ", instr=" << instructions << endl;
+
     switch (direction)
     {
     case 'N': direction = kNorth;
@@ -116,6 +119,7 @@ Rover::Rover(int x, int y, char direction, const std::string & instructions, Pla
     default:
         cerr << "Read unknown direction: '" << direction << "'" << endl;
     }
+    plateau.AddRover(this);
 }
 
 
@@ -167,6 +171,7 @@ bool Rover::IsDoneMoving() const
 // Turns the rover 90 degrees to the left.
 void Rover::TurnLeft()
 {
+    cerr << "turn left" << endl;
     switch (CurrentDirection())
     {
         case kNorth:
@@ -174,7 +179,7 @@ void Rover::TurnLeft()
             break;
 
         case kEast:
-            direction_ = kNorth;
+            direction_ = kNorth; 
             break;
 
         case kSouth:
@@ -191,6 +196,7 @@ void Rover::TurnLeft()
 // Turns the rover 90 degrees to the right.
 void Rover::TurnRight()
 {
+    cerr << "turn right" << endl;
     switch (CurrentDirection())
     {
         case kNorth:
@@ -216,11 +222,15 @@ void Rover::TurnRight()
 // Returns success if we can do this legally.
 bool Rover::MoveForward()
 {
+    cerr << "move forward" << endl;
     int x, y;
+    GetCurrentPosition(x, y);
+    GetPlateau().SetMark(x, y, Marker());
     GetForwardPosition(x, y);
     bool success = GetPlateau().IsValidPosition(x, y);
     if (success)
     {
+        GetPlateau().SetMark(x, y, '*');
         x_ = x;
         y_ = y;
     }
@@ -258,4 +268,30 @@ void Rover::GetForwardPosition(int & x, int & y)
             x -= 1;
             break;
     }
+}
+
+
+// Returns marker corresponding to the current direction
+char Rover::Marker() const
+{
+    char result = '\0';
+    switch (CurrentDirection())
+    {
+        case kNorth:
+            result = '^';
+            break;
+
+        case kEast:
+            result = '>';
+            break;
+
+        case kSouth:
+            result = 'V';
+            break;
+
+        case kWest:
+            result = '<';
+            break;
+    }
+    return result;
 }
