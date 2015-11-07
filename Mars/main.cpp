@@ -57,8 +57,6 @@ bool ParseInput(const string & fileName, Plateau * & plateau)
 
     while (success && std::getline(infile, line))
     {
-//        cerr << "Read rover, line=\"" << line << "\"" << endl;
-        
         SplitIntoTokens(line, roverTokens);
 
         success = roverTokens.size() == 3;
@@ -88,10 +86,6 @@ bool ParseInput(const string & fileName, Plateau * & plateau)
                 plateau->AddRover(new Rover(x, y, direction, instructions, *plateau));
             }
         }
-//        else
-//        {
-//            cerr << "Failure 2, size = " << roverTokens.size() << endl;
-//        }
     }
     if (!success)
     {

@@ -51,6 +51,7 @@ public:
     bool IsDoneMoving() const;                        // Returns true iff this rover is done moving
 
     char CurrentDirection() const { return direction_; }
+
     void TurnLeft();                                  // Turns the rover 90 degrees counter-clockwise
     void TurnRight();                                 // Turns the rover 90 degrees clockwise
     bool MoveForward();                               // Tries to move one step forward. Returns success.

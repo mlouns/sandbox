@@ -80,7 +80,6 @@ void Plateau::OutputMap(ostream & os) const
 // Adds newRover to this plateau.
 void Plateau::AddRover(Rover * newRover)
 {
-//    cerr << "Add rover: count = " << RoverCount() << endl;
     roverVector_.push_back(newRover);
     newRover->SetId('0' + char(RoverCount()));
 }
@@ -91,7 +90,6 @@ void Plateau::MoveRovers()
 {
     for (auto rover : roverVector_)
     {
-//        cerr << "Move rover: " << rover << endl;
         rover->Move();
     }
 }
@@ -115,7 +113,6 @@ Rover::Rover(int x, int y, char direction, const std::string & instructions, Pla
       currentInstructionIndex_(0),
       plateau_(plateau)
 {
-//    cerr << "New rover: (" << x << ", " << y << "), dir=" << direction << ", instr=" << instructions << endl;
 }
 
 
@@ -125,7 +122,6 @@ bool Rover::Move()
     bool success = true;
     while (success && !IsDoneMoving())
     {
-//        cerr << "  current status = " << CurrentStatus() << endl;
         success = MoveOnce();
     }
     return success;
@@ -135,7 +131,6 @@ bool Rover::Move()
 // Move this rover the single next instruction.
 bool Rover::MoveOnce()
 {
-//    cerr << "    Move once: " << this << endl;
     bool success = true;
     switch (CurrentInstruction())
     {
@@ -162,7 +157,6 @@ bool Rover::MoveOnce()
 // Return true iff this rover has finished moving.
 bool Rover::IsDoneMoving() const
 {
-//    cerr << "    Is done? current=" << CurrentInstructionIndex() << endl;
     return CurrentInstructionIndex() >= instructions_.size();
 }
 
@@ -170,7 +164,6 @@ bool Rover::IsDoneMoving() const
 // Turns the rover 90 degrees to the left.
 void Rover::TurnLeft()
 {
-//    cerr << "    turn left" << endl;
     switch (CurrentDirection())
     {
         case 'N':
@@ -195,7 +188,6 @@ void Rover::TurnLeft()
 // Turns the rover 90 degrees to the right.
 void Rover::TurnRight()
 {
-//    cerr << "    turn right" << endl;
     switch (CurrentDirection())
     {
         case 'N':
@@ -221,7 +213,6 @@ void Rover::TurnRight()
 // Returns success if we can do this legally.
 bool Rover::MoveForward()
 {
-//    cerr << "    move forward" << endl;
     int x, y;
     GetCurrentPosition(x, y);
     GetPlateau().SetMark(x, y, Marker());
