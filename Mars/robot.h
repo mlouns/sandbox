@@ -56,6 +56,7 @@ public:
     void TurnRight();                                 // Turns the rover 90 degrees clockwise
     bool MoveForward();                               // Tries to move one step forward. Returns success.
 
+    const std::string & Instructions() const { return instructions_; }
     size_t CurrentInstructionIndex() const { return currentInstructionIndex_; }
     char CurrentInstruction() const { return InstructionAt(CurrentInstructionIndex()); }
     char InstructionAt(size_t index) const { return instructions_[index]; }

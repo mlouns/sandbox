@@ -113,6 +113,7 @@ Rover::Rover(int x, int y, char direction, const std::string & instructions, Pla
       currentInstructionIndex_(0),
       plateau_(plateau)
 {
+    plateau.AddRover(this);
 }
 
 

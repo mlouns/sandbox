@@ -83,7 +83,7 @@ bool ParseInput(const string & fileName, Plateau * & plateau)
                 string instructions;
                 std::getline(infile, instructions);
 
-                plateau->AddRover(new Rover(x, y, direction, instructions, *plateau));
+                auto rover = new Rover(x, y, direction, instructions, *plateau);
             }
         }
     }
