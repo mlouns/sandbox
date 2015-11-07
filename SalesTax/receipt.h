@@ -30,6 +30,12 @@ public:
     float TotalCost() const { return TotalBasePrice() + TotalCombinedTax(); }   // Total cost of everything
     size_t ItemCount() const { return itemVector_.size(); }                     // How many items we have
 
+    // Reads fileName line by line, and computes tax on each item in it, writing result to os.
+    //     fileName: name of the input file to read items from.
+    //     itemFactory: an ItemFactory with information about which items are exempt.
+    //     Returns true iff operation is a success.
+    bool ComputeTax(const std::string & fileName, const ItemFactory & itemFactory, std::ostream & os);
+
 private:
     ItemVector itemVector_;                // list of all items on the receipt
 };

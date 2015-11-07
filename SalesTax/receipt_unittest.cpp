@@ -45,7 +45,7 @@ TEST(Receipt, Spec_01)
     EXPECT_NEAR(1.5, receipt.TotalCombinedTax(), 0.0001);
     EXPECT_NEAR(29.83, receipt.TotalCost(), 0.0001);
 
-    receipt.Output(cerr);
+    receipt.OutputComplete(cerr);
 }
 
 
@@ -73,7 +73,7 @@ TEST(Receipt, Spec_02)
     EXPECT_NEAR(7.65, receipt.TotalCombinedTax(), 0.0001);
     EXPECT_NEAR(65.15, receipt.TotalCost(), 0.0001);
 
-    receipt.Output(cerr);
+    receipt.OutputComplete(cerr);
 }
 
 
@@ -105,5 +105,5 @@ TEST(Receipt, Spec_03)
     EXPECT_NEAR(6.70, receipt.TotalCombinedTax(), 0.0001);
     EXPECT_NEAR(74.68, receipt.TotalCost(), 0.0001);
 
-    receipt.Output(cerr);
+    receipt.OutputComplete(cerr);
 }

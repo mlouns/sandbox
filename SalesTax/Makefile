@@ -1,4 +1,4 @@
-TARGET = main
+TARGET = tax
 LIBS = -lmpfr -lgmp
 CC = gcc
 CXX = g++
