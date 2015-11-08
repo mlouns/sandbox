@@ -12,6 +12,10 @@ All classes and their interfaces are described in the `robot.h` file.
 
 `Rover`: models a rover.
 
+## Unit tests
+
+Test files are in the Mars/utest directory.
+
 ## How to use
 
 ### Input file

@@ -44,12 +44,6 @@ namespace
     //   rounding: amount to round up to. If rounding up to nearest dime, set to 0.10
     float IncrementalPercentage(float price, float percent, float rounding)
     {
-//        cerr << "<in inc:"
-//             << " price=" << price
-//             << " percent=" << percent
-//             << " rounding=" << rounding
-//             << " raw=" << RawPercentage(price, percent)
-//             << ">" << endl;
         return RoundUpToNearest(RawPercentage(price, percent), rounding);
     }
 } // anonymous namespace
@@ -62,11 +56,6 @@ const float Item::kRoundingIncrement = 0.05f;
 // Returns import duty to be charged on this item.
 float Item::Duty() const
 {
-//    cerr << "<in Duty:"
-//         << " import=" << (IsImport() ? "true" : "false")
-//         << " base=" << BasePrice()
-//         << " pct=" << IncrementalPercentage(BasePrice(), kDutyPercentage, kRoundingIncrement)
-//         << ">" << endl;
     return IsImport() ? IncrementalPercentage(BasePrice(), kDutyPercentage, kRoundingIncrement) : 0.0f;
 }
 

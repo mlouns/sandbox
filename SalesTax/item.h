@@ -64,7 +64,7 @@ typedef std::vector<Store::Item> ItemVector;
 class ItemFactory
 {
 public:
-    ItemFactory(int size) { }
+ItemFactory(int id) : id_(id) { }
 
     // Sets newItem to be a new Item, matching the description in itemLine.
     //   Returns true iff we successfully parsed itemLine
@@ -106,6 +106,8 @@ protected:
     std::set<std::string> medicalItems_;           // Set of tax-exempt medical items
     std::set<std::string> foodItems_;              // Set of tax-exempt food items
     std::set<std::string> bookItems_;              // Set of tax-exempt book items
+
+    int id_;                                       // is for this ItemFactory
 };
 
 } // namespace Store
