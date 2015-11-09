@@ -1,4 +1,4 @@
-# Relevant Files
+## Relevant Files
 
 The project is split into two directories: `Mars` and `SalesTax`.
 
@@ -7,3 +7,10 @@ Each directory has documentation in MarkDown format in the appropriate `.md` fil
 To build the executable, run the `Makefile` in each directory.
 
 Each directory also has unit tests in its `utest` directory. The source for those is in the higher-level directory. Unit tests may be built by running the `Makefile` in each `utest` directory.
+
+
+## Output
+
+Output from each program is in the "Example Ouput" section of each `.md` file in the relevant directory.
+
+This may be verified by building and running each program.
